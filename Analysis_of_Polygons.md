@@ -15,7 +15,8 @@ Foremost, I wanted to reproduce their nice vizualization of spatial adjacency ne
 knit('001-minimal.Rmd')
 
 Here are the preliminaries:
-```{r, message=F, warning=F}
+
+```r
 require(GISTools)
 require(SpatialEpi)
 require(rgdal)
@@ -24,7 +25,8 @@ require(spdep)
 
 The dataset is loaded, coordinates transformed, and a descriptive variable extracted.
 From which we can plot spatial distribution of smoking in Pennsylvania:
-```{r}
+
+```r
 data(pennLC)
 #str(pennLC)
 penn.state.latlong <- pennLC$spatial.polygon
@@ -33,28 +35,18 @@ penn.state.utm <- spTransform(penn.state.latlong,
 smk<-pennLC$smoking$smoking *100
 ```
 
-```{r, echo=FALSE, out.width='350px', dpi=200}
-shades = auto.shading(smk, 
-                      n =6, 
-                      cols = brewer.pal(5, "Reds"))
-
-par(mar =c(0,0,0,0))
-choropleth(penn.state.utm, smk, shades)
-choro.legend(538.336,
-             4394,
-             shades, 
-             title = '% Smoking',
-             cex = .5)
-
-```
+<img src="figure/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" width="350px" />
 
 But, what I really liked in the tutorial was relationship vizualization:
-```{r, echo=TRUE, out.width='350px', dpi=200}
+
+```r
 penn.state.nb <- poly2nb(penn.state.utm)
 # The object class "nb" stores a list of neighboring polygons
 plot(penn.state.utm, border = "lightgrey")
 plot(penn.state.nb, coordinates(penn.state.utm), add = T, col = "#0000FF50", lwd = 2)
 ```
+
+<img src="figure/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" width="350px" />
 
 
 The authors suggest a first order exploratory approach:
@@ -68,7 +60,8 @@ share a value similar  to their local neighborhood.
 Moreover, an enrichment of points in 1st and 3rd quadrants 
 manifests a degree of spatial auto correlation.
 
-```{r, echo=TRUE}
+
+```r
 # This object holds the (i) neighbors of each polygon and (ii) their weights
 
 penn.state.lw <- nb2listw(penn.state.nb)
@@ -79,5 +72,7 @@ abline(0,1)
 abline(v=mean(smk), lty=2)
 abline(h =mean(smk.lagged.means), lty =2)
 ```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
 
 moran.plot(smk,penn.state.lw)
