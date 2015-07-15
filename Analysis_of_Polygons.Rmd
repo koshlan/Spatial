@@ -11,9 +11,6 @@ This document was created after following a tutorial from Brunsdon and Comber's
 
 Foremost, I wanted to reproduce their nice vizualization of spatial adjacency networks.
 
-
-knit('001-minimal.Rmd')
-
 Here are the preliminaries:
 ```{r, message=F, warning=F}
 require(GISTools)
