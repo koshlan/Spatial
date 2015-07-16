@@ -5,19 +5,8 @@ date: "July 15, 2015"
 output: html_document
 ---
 
-
 This particular document was created as notes following a tutorial from Brunsdon and Comber's 
 (2015) An Introduction to R for Spatial Analysis, chapter 7.
-
-Foremost, I read the chapter because they had a very nice vizualization of 
-polygon adjacency networks (see below).
-
-This particular document was created as note following a tutorial from Brunsdon and Comber's 
-(2015) An Introduction to R for Spatial Analysis. 
-
-Foremost, I read the chapter because they had a very nice vizualization of 
-polygon adjacency networks.
->>>>>>> 9ea931e3aa81f0688d863963076b9288caaa88a5
 
 ### Packages
 Here are the preliminaries:
