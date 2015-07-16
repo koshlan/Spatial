@@ -5,12 +5,16 @@ date: "July 15, 2015"
 output: html_document
 ---
 
-To produce more reproducible research, I am migrating tutorials to Rmarkdown using knitr.
-This document was created after following a tutorial from Brunsdon and Comber's 
+
+To produce more reproducible research and get the most out of reading, I am 
+migrating tutorial notes to Rmarkdown using knitr.
+
+This particular document was created after following a tutorial from Brunsdon and Comber's 
 (2015) An Introduction to R for Spatial Analysis. 
 
-Foremost, I wanted to reproduce their nice vizualization of spatial adjacency networks.
+Foremost, they had very nice vizualization of spatial adjacency networks.
 
+### Packages
 Here are the preliminaries:
 
 ```r
@@ -33,7 +37,7 @@ smk<-pennLC$smoking$smoking *100
 ```
 
 <img src="figure/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" width="350px" />
-
+### Polygons Network
 But, what I really liked in the tutorial was relationship vizualization:
 
 ```r
@@ -45,7 +49,7 @@ plot(penn.state.nb, coordinates(penn.state.utm), add = T, col = "#0000FF50", lwd
 
 <img src="figure/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" width="350px" />
 
-
+### Lagged Means
 The authors suggest a first order exploratory approach:
 analysis of lagged means, appropriate to continuous data.
 
@@ -72,4 +76,158 @@ abline(h =mean(smk.lagged.means), lty =2)
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
 
-moran.plot(smk,penn.state.lw)
+### Moran's I
+Moran's I is a measure of spatial autocorrelation amoung polygons in a spatial domain.
+
+The starting point is a matrix (W) that relates the degree of dependence between
+the ith and jth polygon, and the statistic follows:
+
+ $\begin{equation}
+I = \frac{n}{\displaystyle\sum_{i=1}^n \sum_{j=1}^n w_{ij}}
+\frac{\displaystyle\sum_{i=1}^n \sum_{j=1}^n w_{ij}(x_i - \bar{x})(x_j -
+  \bar{x})}{\displaystyle\sum_{i=1}^n (x_i - \bar{x})^2},\label{eq:morani}
+\end{equation}$
+
+The moran test can be run from spdep no the listw object
+
+```r
+require(spdep)
+moran.test(smk,penn.state.lw)
+```
+
+```
+## 
+## 	Moran's I test under randomisation
+## 
+## data:  smk  
+## weights: penn.state.lw  
+## 
+## Moran I statistic standard deviate = 5.527, p-value = 1.629e-08
+## alternative hypothesis: greater
+## sample estimates:
+## Moran I statistic       Expectation          Variance 
+##       0.404309335      -0.015151515       0.005759843
+```
+
+Brunsdon and Comber's make two noteworthy observations. First, 
+When the W matrix is standardized so the rows equal one, when the weights are 
+exactly those used in a lagged mean test. Second, the Moran's I coefficient is 
+dimensionless number that varies with valuses of W matrix. Thus, it's interpretation should involve
+a comparison hus should be compared to a null hypothesis that there was 
+no spatial correlation at all and the value could be achieved by random chance.
+
+Three approaches are offered.
+
+1. Parametric assume the value are drawn from a gaussian, with a test statistic (see page 233)
+2. Premuation test, with convergens to a normal. That is, premute all the values randomly amoung polygons.
+3. Monte Carlo
+
+Note the two choices
+
+
+```r
+require(spdep)
+moran.test(smk,penn.state.lw, randomisation = TRUE)
+```
+
+```
+## 
+## 	Moran's I test under randomisation
+## 
+## data:  smk  
+## weights: penn.state.lw  
+## 
+## Moran I statistic standard deviate = 5.527, p-value = 1.629e-08
+## alternative hypothesis: greater
+## sample estimates:
+## Moran I statistic       Expectation          Variance 
+##       0.404309335      -0.015151515       0.005759843
+```
+
+```r
+moran.test(smk,penn.state.lw, randomisation = FALSE)
+```
+
+```
+## 
+## 	Moran's I test under normality
+## 
+## data:  smk  
+## weights: penn.state.lw  
+## 
+## Moran I statistic standard deviate = 5.5593, p-value = 1.355e-08
+## alternative hypothesis: greater
+## sample estimates:
+## Moran I statistic       Expectation          Variance 
+##        0.40430934       -0.01515152        0.00569310
+```
+
+```r
+moran.mc(smk,penn.state.lw, 1000)
+```
+
+```
+## 
+## 	Monte-Carlo simulation of Moran's I
+## 
+## data:  smk 
+## weights: penn.state.lw  
+## number of simulations + 1: 1001 
+## 
+## statistic = 0.4043, observed rank = 1001, p-value = 0.000999
+## alternative hypothesis: greater
+```
+
+
+### Spatial Autocorrelation
+
+####SAR MODEL
+
+Weights are often based on polygons adjacency. Recall that in Kriging, a similar variance 
+covariance matrix is based on physical distance.
+
+
+
+
+### Summary. 
+
+So what are the take aways. To work with polygon spdep is the package with the glue.
+A crucial set of objects for encapsilating information about polygon adjacency are nb and listw.
+
+A function for determining nieghbors
+
+spdep::poly2nb()
+
+A function for creating an object to hold neighbors and weights 
+
+spdep::nb2listw()
+
+
+
+Some things left to discover:
+
+What about weights based on centroid distance or edge distance?
+
+What about neighbors of neighbors?
+
+How scalable are these objects and functions?
+
+Identifying spatial correlation is easy? How can it be used to improve prediction.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
