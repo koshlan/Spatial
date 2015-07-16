@@ -5,14 +5,11 @@ date: "July 15, 2015"
 output: html_document
 ---
 
-
-To produce more reproducible research and get the most out of reading, I am 
-migrating tutorial notes to Rmarkdown using knitr.
-
-This particular document was created after following a tutorial from Brunsdon and Comber's 
+This particular document was created as note following a tutorial from Brunsdon and Comber's 
 (2015) An Introduction to R for Spatial Analysis. 
 
-Foremost, they had very nice vizualization of spatial adjacency networks.
+Foremost, I read the chapter because they had a very nice vizualization of 
+polygon adjacency networks.
 
 ### Packages
 Here are the preliminaries:
@@ -25,7 +22,7 @@ require(spdep)
 ```
 
 The dataset is loaded, coordinates transformed, and a descriptive variable extracted.
-From which we can plot spatial distribution of smoking in Pennsylvania:
+From which it is straightforward to plot spatial distribution of smoking in Pennsylvania:
 
 ```r
 data(pennLC)
@@ -37,8 +34,9 @@ smk<-pennLC$smoking$smoking *100
 ```
 
 <img src="figure/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" width="350px" />
+
 ### Polygons Network
-But, what I really liked in the tutorial was relationship vizualization:
+Here is the code for the graphic I really liked in the tutorial.
 
 ```r
 penn.state.nb <- poly2nb(penn.state.utm)
@@ -51,12 +49,12 @@ plot(penn.state.nb, coordinates(penn.state.utm), add = T, col = "#0000FF50", lwd
 
 ### Lagged Means
 The authors suggest a first order exploratory approach:
-analysis of lagged means, appropriate to continuous data.
+analysis of lagged means, appropriate when a feature of continuous data is associated with each polgon.
 
-That is, the value of polygon divided vs. the unweighted mean of its neighbors. 
+The lagged mean: the value of polygon vs. the unweighted mean of its neighbors. 
 A comparison of the polygon value to that of its lagged mean shows anomolies 
 that differ from surroundings, as well as points on the 45 degree line that 
-share a value similar  to their local neighborhood. 
+share a value similar to their local neighborhood. 
 
 Moreover, an enrichment of points in 1st and 3rd quadrants 
 manifests a degree of spatial auto correlation.
@@ -110,19 +108,19 @@ moran.test(smk,penn.state.lw)
 ```
 
 Brunsdon and Comber's make two noteworthy observations. First, 
-When the W matrix is standardized so the rows equal one, when the weights are 
-exactly those used in a lagged mean test. Second, the Moran's I coefficient is 
-dimensionless number that varies with valuses of W matrix. Thus, it's interpretation should involve
-a comparison hus should be compared to a null hypothesis that there was 
-no spatial correlation at all and the value could be achieved by random chance.
+when the W matrix is standardized so the rows equal one, then the weights are 
+exactly those used in the lagged mean test. (e.g Say a polygon as 3 neighbors then each has weight 1/3) 
+
+Second, the Moran's I coefficient is dimensionless number that varies with valuses of W matrix. 
+Further it depends on the homogeneity of the polygon values and number of polygons, so
+it's interpretation should involve a test against a null hypothesis: namely that there was 
+no spatial correlation beyond what could be achieved by random chance.
 
 Three approaches are offered.
 
 1. Parametric assume the value are drawn from a gaussian, with a test statistic (see page 233)
-2. Premuation test, with convergens to a normal. That is, premute all the values randomly amoung polygons.
-3. Monte Carlo
-
-Note the two choices
+2. Premuation test, with convergens to a normal. That is, premute all the values randomly amoung polygons (see page 233).
+3. Monte Carlo, with random premutatation.
 
 
 ```r
@@ -183,15 +181,14 @@ moran.mc(smk,penn.state.lw, 1000)
 
 ####SAR MODEL
 
-Weights are often based on polygons adjacency. Recall that in Kriging, a similar variance 
-covariance matrix is based on physical distance.
-
-
-
+Weights are often based on polygons adjacency. Recall that in Kriging, a similar variance- 
+covariance matrix is modeled based physical distance.
 
 ### Summary. 
 
-So what are the take aways. To work with polygon spdep is the package with the glue.
+So what are the take aways? spdep is a package 
+with some tools that glue to analyze adjacent polgons.
+
 A crucial set of objects for encapsilating information about polygon adjacency are nb and listw.
 
 A function for determining nieghbors
@@ -202,32 +199,14 @@ A function for creating an object to hold neighbors and weights
 
 spdep::nb2listw()
 
-
-
 Some things left to discover:
+
+What about nearby polygons that do not share edges?
 
 What about weights based on centroid distance or edge distance?
 
 What about neighbors of neighbors?
 
-How scalable are these objects and functions?
+How scalable are these objects and functions to larger datasets?
 
 Identifying spatial correlation is easy? How can it be used to improve prediction.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
