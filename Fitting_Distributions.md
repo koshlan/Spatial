@@ -39,7 +39,7 @@ qqplot(x.norm , x.actual, main = "QQ-plot distr. Normal", cex.main = .5, xlim = 
 abline(0,1)
 ```
 
-![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1-1.png) 
+![plot of chunk qqplots](figure/qqplots-1.png) 
 
 ## fitdistrplus
 
@@ -54,7 +54,7 @@ data("groundbeef")
 plotdist(groundbeef$serving, histo = TRUE, demp = TRUE)
 ```
 
-![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
+![plot of chunk fitdistrplus_hist](figure/fitdistrplus_hist-1.png) 
 
 The authors of **fitdistrplus** have added skewness ("assymotry") and kurtosis ("peakedness") to default summary statistics as well as a Cullen and Frey Graph. For their example dataset, we see that the skew and kurtosis of the data could feasibly be modeled with a Weibull, gamma, or lognormal distribution.
 
@@ -65,7 +65,7 @@ par(mfrow = c(1,1))
 descdist(groundbeef$serving, boot =100)
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+![plot of chunk fitdistrplus_descdist](figure/fitdistrplus_descdist-1.png) 
 
 ```
 ## summary statistics
@@ -93,7 +93,7 @@ fit.lnorm   <- fitdist(groundbeef$serving, "lnorm"   )
 plot(fit.weibull)
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+![plot of chunk fitdistrplus_compare](figure/fitdistrplus_compare-1.png) 
 
 ```r
 par(mfrow = c(2, 2))
@@ -104,7 +104,7 @@ cdfcomp(  list(fit.weibull, fit.lnorm, fit.gamma), legendtext = plot.legend)
 ppcomp(   list(fit.weibull, fit.lnorm, fit.gamma), legendtext = plot.legend)
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-2.png) 
+![plot of chunk fitdistrplus_compare](figure/fitdistrplus_compare-2.png) 
 
 ```r
 par(mfrow = c(1,1))
@@ -119,13 +119,16 @@ package provides is a way to estimate uncertainty associated with parameter via 
 
 
 ```r
-fit.lnorn.boot <- bootdist(fit.lnorm)
+fit.lnorm.boot <- bootdist(fit.lnorm)
 par(mfrow = c(1,1))
 summary(fit.lnorm.boot)
 ```
 
 ```
-## Error in summary(fit.lnorm.boot): object 'fit.lnorm.boot' not found
+## Parametric bootstrap medians and 95% percentile CI 
+##            Median      2.5%     97.5%
+## meanlog 4.1711150 4.1048263 4.2343228
+## sdlog   0.5350935 0.4835747 0.5815152
 ```
 
 ## Vizualizing Distributions
