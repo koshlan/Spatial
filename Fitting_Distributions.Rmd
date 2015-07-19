@@ -5,7 +5,7 @@ date: "July 18, 2015"
 output: html_document
 ---
 
-##Fitting a Distributions
+##Fitting Distributions
 
 This meant as repository of examples of R tools I have found useful for fitting distributions.
 
