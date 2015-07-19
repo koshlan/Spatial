@@ -126,9 +126,9 @@ summary(fit.lnorm.boot)
 
 ```
 ## Parametric bootstrap medians and 95% percentile CI 
-##           Median      2.5%     97.5%
-## meanlog 4.169784 4.1031888 4.2390312
-## sdlog   0.533837 0.4915008 0.5799084
+##            Median      2.5%     97.5%
+## meanlog 4.1696483 4.1033505 4.2311263
+## sdlog   0.5344043 0.4914052 0.5801146
 ```
 
 ## Vizualizing Distributions
