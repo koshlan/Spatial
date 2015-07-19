@@ -7,23 +7,25 @@ output: html_document
 
 ##Fitting Distributions
 
-This meant as repository of examples of R tools I have found useful for fitting distributions.
+This document is a repository of examples for using R tools I to fit distributions to data.
 
 ### Quantile-Quantile Plot
 
-At a miniumum, a Q-Q plot compares the data the fitted and empircal distribution. 
-Y-axis values are teh empirical quantiles vs x-values predicted from a theoretical 
+As a starting point, a Q-Q plot compares the quantiles of data from distribution (with given parameters) and the observed data. 
+Here the values on the y-axes are the empirical quantiles; x-values are predicted from a theoretical 
 distribution. 
 
-Suppose we have some data that are normally distributed, and we test the data against 
-a theoretical dataset drawn from a normal with parameters estimated from the samppe.
-Departure from the 45 degree line calls into question whether the observed data 
-comes form a population with different true parameters.  
+Suppose we have some sample data that are roughtly normally distributed, and we test them against
+a randomly choosen dataset drawn a normal distribution with parameters estimated from our sample data.
 
-Suppose instead we wanted to test if the data might have come from a Cauchy distribution. 
-We can fit a Cauchy distribution using the maximum liklihood method implemented
+In the plot, systematic departure from the 45 degree line calls into question whether the sample data 
+comes from a true population with different true parameters. 
+Notice that even in our contrived case, there is not perfect agreement.  
+
+Suppose instead we tested if the data might have come from a Cauchy distribution. 
+We can fit a Cauchy distribution to our sample data using the maximum liklihood method implemented
 in the **MASS** package via *fitdistr*. Comparision of the qqplots suggests that 
-this is a poor choice of distribution. Specifically, the greater departure from the 45 degree line compared with a corresponding qqplot generated under the assumption of a normal distribution.
+this is a poor choice. Specifically, see the greater departure from the 45 degree line compared with a corresponding qqplot generated under the assumption of a normal distribution.
 
 
 ```r
@@ -57,7 +59,6 @@ plotdist(groundbeef$serving, histo = TRUE, demp = TRUE)
 ![plot of chunk fitdistrplus_hist](figure/fitdistrplus_hist-1.png) 
 
 The authors of **fitdistrplus** have added skewness ("assymotry") and kurtosis ("peakedness") to default summary statistics as well as a Cullen and Frey Graph. For their example dataset, we see that the skew and kurtosis of the data could feasibly be modeled with a Weibull, gamma, or lognormal distribution.
-
 
 
 ```r
