@@ -87,7 +87,7 @@ That is just the beginning of what the package can do (e.g. alternative methods 
 package provides is a way to estimate uncertainty associated with parameter via a bootstrap.
 
 ```{r}
-fit.lnorn.boot <- bootdist(fit.lnorm)
+fit.lnorm.boot <- bootdist(fit.lnorm)
 par(mfrow = c(1,1))
 summary(fit.lnorm.boot)
 ```

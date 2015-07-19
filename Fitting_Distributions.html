@@ -125,8 +125,19 @@ ppcomp(   list(fit.weibull, fit.lnorm, fit.gamma), legendtext = plot.legend)</co
 <pre class="r"><code>par(mfrow = c(1,1))</code></pre>
 <p>Wow! That is a lot of information in 4 panels. I found the author’s decription informative for the evaluation of these distributions:</p>
 <blockquote>
-<p>The Q-Q plot emphasizes the lack-of-fit at the distribution tails while the P-P plot emphasizes the lack-of-fit at the distribution center. In the present example (in Figure 3), none of the three fitted distributions correctly describes the center of the distribution, but the Weibull and gamma distributions could be prefered for their better description of the right tail of the empirical distribution, especially if this tail is important in the use of the fitted distribution, as it is in the context of food risk assessment.</p>
+<p>“The Q-Q plot emphasizes the lack-of-fit at the distribution tails while the P-P plot emphasizes the lack-of-fit at the distribution center. In the present example (in Figure 3), none of the three fitted distributions correctly describes the center of the distribution, but the Weibull and gamma distributions could be prefered for their better description of the right tail of the empirical distribution, especially if this tail is important in the use of the fitted distribution, as it is in the context of food risk assessment.”</p>
 </blockquote>
+<p>That is just the beginning of what the package can do (e.g. alternative methods of parameter estimation, Pareto and Burr distributions). I leave those for the vignette. But one other really cool tool the package provides is a way to estimate uncertainty associated with parameter via a bootstrap.</p>
+<pre class="r"><code>fit.lnorm.boot &lt;- bootdist(fit.lnorm)
+par(mfrow = c(1,1))
+summary(fit.lnorm.boot)</code></pre>
+<pre><code>## Parametric bootstrap medians and 95% percentile CI 
+##            Median     2.5%     97.5%
+## meanlog 4.1690632 4.108339 4.2335918
+## sdlog   0.5344778 0.488367 0.5831852</code></pre>
+</div>
+<div id="vizualizing-distributions" class="section level2">
+<h2>Vizualizing Distributions</h2>
 </div>
 
 
