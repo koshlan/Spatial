@@ -7,7 +7,7 @@ output: html_document
 
 ##Fitting Distributions
 
-This meant as repository of examples of R tools I have found useful for fitting distributions.
+This is meant as repository of examples of R tools I have found useful for fitting distributions.
 
 ### Quantile-Quantile Plot
 
