@@ -1,0 +1,95 @@
+---
+title: "Almonds_of_Wrath"
+author: "Koshlan"
+date: "August 5, 2015"
+output: html_document
+---
+### Spatial Vignette 1: The Nuts of Wrath: Kern County, CA 
+
+As an environmental scientist, 
+I am fascinated by spatial data, natural resource use, and
+the consequences of human activities on environmental quality. 
+
+In this vignette, I explore the expansion of almonds
+in Kern Country, California from 2010 to 2014. 
+
+The expansion of almonds and other high-value woody perennial crops (e.g.  
+such as pistachios and walnuts) has been well documented by local and 
+national media covering the California drought; however, I am interested in some basic land-use questions:
+
+* First, what is the plausible **net effect** on irrigation of nut tree expansion.
+Obviouslly these crops need water, but what were the prior-uses and 
+associated water demand of the lands converted to new Almond orchards. 
+
+* Second, what associations may exist between agricultural conversions 
+and pesticide use. 
+
+* Finally what portions of Kern county are most likely to be further converted to 
+future nut orchards.
+
+```{r, packages, message=F, warning=F}
+library(raster)
+library(maptools)
+```
+
+### Where to begin?
+
+Kern County publishes permited agricultural boundaries. This data is provided as a shapefile. We can read the polygon file in using maptoos::readShapePoly; however the object lacks information about the coordinate systems and projection, two essential
+aspects for contextualizing spatial data. For a quick reference on this, check out
+
+*https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/OverviewCoordinateReferenceSystems.pdf
+
+```{r, boundaries }
+kern_boundaries <- maptools::readShapePoly("/Users/koshlan/Dropbox/KernCounty/kern2014/kern2014.shp")
+```
+
+This information is provided on at the Kern County Department Of Agriculture And Measurement Standards (http://www.kernag.com/gis/gis-data.asp). 
+
+* **NAD_1983_StatePlane_California_V_FIPS_0405_Feet**
+* Projection:  Lambert_Conformal_Conic
+* False_Easting:  6561666.66666667
+* False_Northing:  1640416.66666667
+* Central_Meridian:  -118.00000000
+* Standard_Parallel_1:	34.03333333
+* Standard_Parallel_2:	35.46666667
+* Latitude_Of_Origin:	33.50000000
+* Linear Unit:	Foot_US
+* Geographic Coordinate System:	GCS_North_American_1983
+* Datum:	D_North_American_1983
+* Prime Meridian:	Greenwich
+* Angular Unit:	Degree
+
+The projection
+is **NAD_1983_StatePlane_California_V_FIPS_0405_Feet**, and to work with it in R
+we need the abbreviated string (proj4string). I took my guess and looked it 
+up at:
+
+* http://epsg.io/102645. 
+
+We can then assign this projection to the polygons object
+```{r, assign_projection}
+sp::proj4string(kern_boundaries) <- CRS("+proj=lcc +lat_1=34.03333333333333 +lat_2=35.46666666666667 +lat_0=33.5 +lon_0=-118 +x_0=2000000 +y_0=500000.0000000002 +ellps=GRS80 +datum=NAD83 +to_meter=0.3048006096012192")
+```
+
+Here I check that our boundary files lands squarely in California.
+
+```{r} 
+states <- readShapePoly("/Users/koshlan/Dropbox/KernCounty/cb_2013_us_state_20m/cb_2013_us_state_20m.shp", proj4string=CRS("+proj=longlat"))
+california <- states[states$STATEFP == "06",]
+plot(california)
+check_kern = sp::spTransform(kern_boundaries, proj4string(california))
+```
+
+### Crop Data
+
+The national agricultural statistics service generates a 30 meter resolution estimate of crop-cover, which is based on a decision tree classifier from landsat imagery. This data is in .geotiff format. If our projection is correctly assigned
+the Kern County crop boundaries should correspond with cropland in the raster dataset. Once we have assigned a projection to a polygon object we can tranform it to another projection. 
+
+```{r}
+# geotiff crop data from 2 years in Kern County, CA  (USDA Cropscape)
+kern2010 <- raster("/Users/koshlan/Dropbox/KernCounty/CDL_2010_06029.tif")
+kern2014 <- raster("/Users/koshlan/Dropbox/KernCounty/CDL_2014_06029.tif")
+kern_boundaries.t <- spTransform(kern_boundaries, proj4string(kern2010))
+plot(kern2014)
+plot(kern_boundaries.t, add = T, border = "white", lwd = 0.1)
+```
